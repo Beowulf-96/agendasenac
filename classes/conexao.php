@@ -13,7 +13,7 @@ class Conexao {
         $this->servidor = "localhost";
         $this->banco = "agendaSenac2025";
         $this->usuario = "root";
-        $this->senha = "";
+        $this->senha = "1234";
     }
 
     public function conectar() {
