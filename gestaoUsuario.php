@@ -9,13 +9,13 @@ $funcao = new Funcoes();
 
 <h1>Usuario Senac 2025</h1>
 <button><a href="adicionarUsuario.php">Adicionar</a></button>
+<button><a href="index.php">Home</a></button>
 
 <table border="2" width="100%">
     <tr>
         <th>ID</th>
         <th>NOME</th>
         <th>EMAIL</th>
-        <th>SENHA</th>
         <th>PERMISSOES</th>
         <th>AÇÕES</th>
     </tr>
@@ -28,7 +28,6 @@ $funcao = new Funcoes();
             <td><?php echo $item['id']; ?></td>
             <td><?php echo $item['nome']; ?></td>
             <td><?php echo $item['email']; ?></td>
-            <td><?php echo $item['senha']; ?></td>
             <td><?php echo $item['permissoes']; ?></td>
             <td>
                 <button><a href="editarUsuario.php?id=<?php echo $item['id'] ?>">EDITAR</a></button>

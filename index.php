@@ -7,9 +7,6 @@ $funcao = new Funcoes();
 
 ?>
 
-<h1>Agenda Senac 2025</h1>
-<button><a href="adicionarContato.php">ADICIONAR</a></button>
-<button><a href="usuario.php">Usuário</a></button>
 <table border="2" width="100%">
     <tr>
         <th>ID</th>
@@ -41,8 +38,10 @@ $funcao = new Funcoes();
             <td><?php echo $item['foto']; ?></td>
             <td><?php echo $item['ativo']; ?></td>
             <td>
-                <button><a href="editarContato.php?id=<?php echo $item['id'] ?>"> EDITAR</a></button>
-                <button><a href="excluirContato.php?id=<?php echo $item['id'] ?>" onclick="return confirm('Deseja realmente excluir esse contato?')">EXCLUIR</a></button>
+                <button><a href="adicionarContato.php">Adicionar</a></button>
+                <button><a href="gestaoUsuario.php">Usuário</a></button>
+                <button><a href="editarContato.php?id=<?php echo $item['id'] ?>"> Editar</a></button>
+                <button><a href="excluirContato.php?id=<?php echo $item['id'] ?>" onclick="return confirm('Deseja realmente excluir esse contato?')">Excluir</a></button>
             </td>
         </tr>
     </tbody>

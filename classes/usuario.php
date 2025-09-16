@@ -34,7 +34,7 @@ class Usuario {
             try{
                 $this->nome = $nome;
                 $this->email = $email;
-                $this->senha = $senha;
+                $this->senha = md5($senha);
                 $this->permissoes = $permissoes;
                 
                 $sql = $this->con->conectar()->prepare("INSERT INTO usuario (nome, email, senha, permissoes) VALUES (:nome, :email, :senha, :permissoes)");
@@ -83,16 +83,15 @@ class Usuario {
 
     }
 
-    public function editar($id, $nome, $email, $senha, $permissoes) {
+    public function editar($id, $nome, $email, $permissoes) {
             $emailExistente = $this->existeEmail($email);
             if (count($emailExistente) > 0 && $emailExistente['id'] != $id) {
                 return FALSE;
             } else {
                 try{
-                    $sql = $this->con->conectar()->prepare("UPDATE usuario SET nome = :nome, email = :email, senha = :senha, permissoes = :permissoes WHERE id = :id");
+                    $sql = $this->con->conectar()->prepare("UPDATE usuario SET nome = :nome, email = :email, permissoes = :permissoes WHERE id = :id");
                     $sql->bindValue(":nome", $nome);
                     $sql->bindValue(":email", $email);
-                    $sql->bindValue(":senha", $senha);
                     $sql->bindValue(":permissoes", $permissoes);
                     $sql->bindValue(":id", $id);
                     $sql->execute();
