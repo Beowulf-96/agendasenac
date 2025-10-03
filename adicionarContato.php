@@ -21,7 +21,7 @@
     Ativo: <br>
     <input type="text" name="ativo"/> <br><br>
 
-    <input type="submit" value="Adicionar Contato"/>
+    <div class="but"><input type="submit" value="Adicionar Contato"/></div>
 
 </form>
 

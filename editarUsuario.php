@@ -31,7 +31,7 @@ if(!empty($_GET['id'])){
     <label><input type="checkbox" name="permissoes[]" value="editar" <?php if( in_array('editar', $permissoes))echo "checked"; ?>> Editar</label><br>
     <label><input type="checkbox" name="permissoes[]" value="deletar" <?php if( in_array('deletar', $permissoes))echo "checked"; ?>> Deletar</label><br>
     <label><input type="checkbox" name="permissoes[]" value="super" <?php if( in_array('super', $permissoes))echo "checked"; ?>> Super</label><br><br>
-    <input type="submit" value="Editar usuário"/>
+    <div class="but"><input type="submit" value="Editar usuário"/></div>
 
 </form>
 

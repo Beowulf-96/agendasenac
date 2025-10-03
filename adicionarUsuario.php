@@ -14,7 +14,7 @@
     <label><input type="checkbox" name="permissoes[]" value="deletar"> Deletar</label><br>
     <label><input type="checkbox" name="permissoes[]" value="super"> Super</label><br><br>
 
-    <input type="submit" value="Adicionar Usuário"/>
+    <div class="but"><input type="submit" value="Adicionar Usuário"/></div>
 
 </form>
 

@@ -39,7 +39,7 @@ if(!empty($_GET['id'])){
     Ativo: <br>
     <input type="text" name="ativo" value="<?php echo $info['ativo']; ?>"/> <br><br>
 
-    <input type="submit" value="Editar contato"/>
+    <div class="but"><input type="submit" value="Editar contato"/></div>
 
 </form>
 

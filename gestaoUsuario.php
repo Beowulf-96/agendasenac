@@ -8,8 +8,6 @@ $funcao = new Funcoes();
 ?>
 
 <h1>Usuario Senac 2025</h1>
-<button><a href="adicionarUsuario.php">Adicionar</a></button>
-<button><a href="index.php">Home</a></button>
 
 <table border="2" width="100%">
     <tr>
@@ -30,8 +28,10 @@ $funcao = new Funcoes();
             <td><?php echo $item['email']; ?></td>
             <td><?php echo $item['permissoes']; ?></td>
             <td>
-                <button><a href="editarUsuario.php?id=<?php echo $item['id'] ?>">EDITAR</a></button>
-                <button><a href="excluirUsuario.php?id=<?php echo $item['id'] ?>" onclick="return confirm('Deseja realmente excluir esse contato?')">EXCLUIR</a></button>
+                <button><a href="adicionarUsuario.php">Adicionar</a></button>
+                <button><a href="index.php">Home</a></button>
+                <button><a href="editarUsuario.php?id=<?php echo $item['id'] ?>">Editar</a></button>
+                <button><a href="excluirUsuario.php?id=<?php echo $item['id'] ?>" onclick="return confirm('Deseja realmente excluir esse contato?')">Excluir</a></button>
             </td>
         </tr>
     </tbody>

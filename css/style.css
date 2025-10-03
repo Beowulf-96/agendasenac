@@ -3,10 +3,17 @@ body {
     background-color: #f0f0f0;
     font-family: Arial, sans-serif;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+html, body {
+    height: 100%;
+    min-height: 100vh;
 }
 
 header {
-    height: 80px;
     text-align: center;
     background-color: #28a745;
     color: white;
@@ -16,18 +23,25 @@ header {
     margin-bottom: 20px;
 }
 
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 footer {
-    height: 100px;
     background-color: #28a745;
     color: white;
     text-align: center;
     border-radius: 5px;
     margin-top: 20px;
     line-height: 100px;
+    font-size: 1.2vw;
 }
 
 table {
-    background-color: white;
+    background-color: rgb(150, 192, 146);
     color: black;
     border-radius: 5px;
     width: 100%;
@@ -39,20 +53,18 @@ table th {
     color: white;
     padding: 10px;
     text-align: center;
+    border-radius: 5px;
 }
 
 table td {
     padding: 10px;
     text-align: center;
     border-bottom: 1px solid #eee;
-}
-
-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+    border-radius: 5px;
 }
 
 button {
-    background-color: #007bff;
+    background-color: #28a745;
     color: white;
     border: none;
     border-radius: 3px;
@@ -67,5 +79,23 @@ button a {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #1a682c;
+}
+
+form {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1.2vw;
+}
+
+.but input {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin: 2px;
+    cursor: pointer;
+}
+.but input:hover {
+    background-color: #1a682c;
 }
