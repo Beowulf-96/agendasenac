@@ -71,6 +71,7 @@ button {
     padding: 5px 10px;
     margin: 2px;
     cursor: pointer;
+    font-size: 0.9vw;
 }
 
 button a {
@@ -95,6 +96,7 @@ form {
     padding: 5px 10px;
     margin: 2px;
     cursor: pointer;
+    font-size: 0.9vw;
 }
 .but input:hover {
     background-color: #1a682c;

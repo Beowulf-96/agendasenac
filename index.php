@@ -4,6 +4,8 @@ include 'classes/funcoes.php';
 
 $contato = new Contato();
 $funcao = new Funcoes();
+//session_start();
+//print_r($_SESSION);
 
 ?>
 

@@ -105,5 +105,21 @@ class Usuario {
         $sql =$this->con->conectar()->prepare("DELETE FROM usuario WHERE id = :id");
         $sql->bindValue(":id", $id);
         $sql->execute();
-        }   
+        }
+        
+        //começando login
+
+        public function fazerLogin($email, $senha) {
+            $sql = $this->con->conectar()->prepare("SELECT * FROM usuario WHERE email = :email AND senha = :senha");
+            $sql->bindValue(":email", $email);
+            $sql->bindValue(":senha", $senha);
+            $sql->execute();
+
+            if($sql->rowCount() > 0) {
+                $sql = $sql->fetch();
+                $_SESSION['logado'] = $sql['id'];
+                return true;
+            }
+            return false;
+        }
     }

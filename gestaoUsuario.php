@@ -7,14 +7,14 @@ $funcao = new Funcoes();
 
 ?>
 
-<h1>Usuario Senac 2025</h1>
+<h1>Usuário Senac 2025</h1>
 
 <table border="2" width="100%">
     <tr>
         <th>ID</th>
         <th>NOME</th>
         <th>EMAIL</th>
-        <th>PERMISSOES</th>
+        <th>PERMISSÕES</th>
         <th>AÇÕES</th>
     </tr>
     <?php
