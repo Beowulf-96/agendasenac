@@ -1,7 +1,16 @@
-<?php include 'inc/header.php'; 
+<?php 
+session_start();
+include 'inc/header.php'; 
 include 'classes/contatos.php';
 include 'classes/funcoes.php';
+include 'classes/usuario.php';
 
+if(!isset($_SESSION['logado'])){
+    header('Location: login.php');
+    exit;
+}
+
+$usuarios = new Usuario();
 $contato = new Contato();
 $funcao = new Funcoes();
 //session_start();
@@ -45,6 +54,7 @@ $funcao = new Funcoes();
                     <button><a href="gestaoUsuario.php">Usuário</a></button>
                     <button><a href="editarContato.php?id=<?php echo $item['id'] ?>"> Editar</a></button>
                     <button><a href="excluirContato.php?id=<?php echo $item['id'] ?>" onclick="return confirm('Deseja realmente excluir esse contato?')">Excluir</a></button>
+                    <button><a href="sair.php">Sair</a></button>
                 </td>
             </tr>
         </tbody>

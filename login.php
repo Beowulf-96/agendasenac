@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'inc/header.php'; 
 require 'classes/usuario.php';
 
 if(!empty($_POST['email'])) {
