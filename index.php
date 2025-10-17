@@ -11,6 +11,7 @@ if(!isset($_SESSION['logado'])){
 }
 
 $usuarios = new Usuario();
+$usuarios->setUsuario($_SESSION['logado']);
 $contato = new Contato();
 $funcao = new Funcoes();
 //session_start();
@@ -50,10 +51,22 @@ $funcao = new Funcoes();
                 <td><?php echo $item['foto']; ?></td>
                 <td><?php echo $item['ativo']; ?></td>
                 <td>
-                    <button><a href="adicionarContato.php">Adicionar</a></button>
+                    <?php if($usuarios->temPermissao("adicionar")): ?>
+                    <button><a href="adicionarContato.php">adicionar</a></button>
+                    <?php endif; ?>
+
+                    <?php if($usuarios->temPermissao("super")): ?>
                     <button><a href="gestaoUsuario.php">Usuário</a></button>
+                    <?php endif; ?>
+
+                    <?php if($usuarios->temPermissao("editar")): ?>
                     <button><a href="editarContato.php?id=<?php echo $item['id'] ?>"> Editar</a></button>
+                    <?php endif; ?>
+
+                    <?php if($usuarios->temPermissao("excluir")): ?>
                     <button><a href="excluirContato.php?id=<?php echo $item['id'] ?>" onclick="return confirm('Deseja realmente excluir esse contato?')">Excluir</a></button>
+                    <?php endif; ?>
+
                     <button><a href="sair.php">Sair</a></button>
                 </td>
             </tr>

@@ -5,6 +5,12 @@ include 'classes/funcoes.php';
 $contato = new Usuario();
 $funcao = new Funcoes();
 
+
+if(!isset($_SESSION['super'])){
+header('Location: login.php');
+exit;
+} 
+
 ?>
 
 <h1>Usuário Senac 2025</h1>
@@ -28,6 +34,7 @@ $funcao = new Funcoes();
             <td><?php echo $item['email']; ?></td>
             <td><?php echo $item['permissoes']; ?></td>
             <td>
+
                 <button><a href="adicionarUsuario.php">Adicionar</a></button>
                 <button><a href="index.php">Home</a></button>
                 <button><a href="editarUsuario.php?id=<?php echo $item['id'] ?>">Editar</a></button>
