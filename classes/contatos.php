@@ -162,5 +162,24 @@ class Contato {
         $sql =$this->con->conectar()->prepare("DELETE FROM contatos WHERE id = :id");
         $sql->bindValue(":id", $id);
         $sql->execute();
-        }   
+        }
+        
+        public function getContato($id) {
+            $array = array();
+            $sql = $this->con->conectar()->prepare("SELECT * FROM contatos WHERE id = :id");
+            $sql->bindValue(':id', $id);
+            $sql->execute();
+            if($sql->rowCount() > 0){
+                $array = $sql->fetch();
+                //mostrar todas as imagens cadastradas
+                $array['foto'] = array();
+                $sql = $this->con->conectar()->prepare("SELECT id, url FROM foto_contato WHERE id_contato = :id_contato");
+                $sql->bindValue(":id_contato", $id);
+                $sql->execute();
+                if($sql->rowCount() > 0) {
+                    $array['foto'] = $sql->fetchAll();
+                }
+            }
+            return $array;
+        }
     }
