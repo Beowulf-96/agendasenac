@@ -58,43 +58,6 @@ class Contato {
                 $sql->bindParam(":ativo", $this->ativo, PDO::PARAM_STR);
                 $sql->execute();
 
-                //inserir imagem se houver
-                if(count($foto) > 0) {
-                    for ($q=0; $q<count($foto['tmp_name']); $q++) {
-                        $tipo = $foto['type'][$q];
-                        if(in_array($tipo, array('image/jpeg', 'image/png'))){
-                            $tmpname = md5(time().rand(0, 9999)).'jpg';
-                            move_uploaded_file($foto['tmp_name'][$q], 'img/contatos/'.$tmpname);
-                            list($width_orig, $height_orig) = getimagesize('img/contatos/'.$tmpname);
-                            $ratio = $width_orig/$height_orig;
-                            $width = 500;
-                            $height = 500;
-                            if($width/$height > $ratio) {
-                                $width = $height * $ratio;
-                            } else {
-                                $height = $width/$ratio;
-                            }
-                            $img = imagecreatetruecolor($width, $height);
-                            if($tipo === 'image/jpeg') {
-                                $origi = imagecreatefromjpeg('image/contatos/'. $tmpname);
-                            } elseif ($tipo == 'image/png') {
-                                $origi = imagecreatefrompng('image/contatos/' .$tmpname);
-                            }
-                            imagecopyesampled($img, $origi, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-
-                            //salvar imagens servidor
-
-                            imagejpeg($img, 'image/contatos/'.$tmpname, 80);
-
-                            //Salvar a url da foto no hd
-                            $sql = $this->con->conectar()->prepare("INSERT INTO foto_contato SET id_contato = :id_contato, url = :url");
-                            $sql->bindValue(":id_contato", $id);
-                            $sql->bindValue(":url", $tmpname);
-                            $sql->execute();
-                        }
-                }
-            }
-                return TRUE;
 
             }catch(PDOException $ex) {
                 return 'ERRO: ' . $ex->getMessage();
@@ -115,6 +78,17 @@ class Contato {
 
         }
 
+    }
+
+    public function getFoto() {
+        $array = array();
+        $sql= $this->con->conectar()->prepare("SELECT *,
+        (select foto_contato.url from foto_contato where foto_contato.id_contato = contatos.id limit 1) as url FROM contatos");
+        $sql->execute();
+        if($sql->rowCount() > 0) {
+            $array = $sql->fetchAll();
+        }
+        return $array;
     }
 
     public function buscar($id) {
@@ -148,10 +122,49 @@ class Contato {
                     $sql->bindValue(":redeSocial", $redeSocial);
                     $sql->bindValue(":profissao", $profissao);
                     $sql->bindValue(":dataNasc", $dataNasc);
-                    $sql->bindValue(":foto", $foto);
+                    //$sql->bindValue(":foto", $foto);
                     $sql->bindValue(":ativo", $ativo);
                     $sql->bindValue(":id", $id);
                     $sql->execute();
+
+                    //inserir imagem se houver
+                if(count($foto) > 0) {
+                    for ($q=0; $q<count($foto['tmp_name']); $q++) {
+                        $tipo = $foto['type'][$q];
+                        if(in_array($tipo, array('image/jpeg', 'image/png'))){
+                            $tmpname = md5(time().rand(0, 9999)).'.jpg';
+                            move_uploaded_file($foto['tmp_name'][$q], 'img/contatos/'.$tmpname);
+                            list($width_orig, $height_orig) = getimagesize('img/contatos/'.$tmpname);
+                            $ratio = $width_orig/$height_orig;
+                            $width = 500;
+                            $height = 500;
+                            if($width/$height > $ratio) {
+                                $width = $height * $ratio;
+                            } else {
+                                $height = $width/$ratio;
+                            }
+                            $img = imagecreatetruecolor($width, $height);
+                            if($tipo === 'image/jpeg') {
+                                $origi = imagecreatefromjpeg('image/contatos/'. $tmpname);
+                            } elseif ($tipo == 'image/png') {
+                                $origi = imagecreatefrompng('image/contatos/' .$tmpname);
+                            }
+                            imagecopyesampled($img, $origi, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+
+                            //salvar imagens servidor
+
+                            imagejpeg($img, 'image/contatos/'.$tmpname, 80);
+
+                            //Salvar a url da foto no hd
+                            $sql = $this->con->conectar()->prepare("INSERT INTO foto_contato SET id_contato = :id_contato, url = :url");
+                            $sql->bindValue(":id_contato", $id);
+                            $sql->bindValue(":url", $tmpname);
+                            $sql->execute();
+                        }
+                }
+            }
+                return TRUE;
+
                     return TRUE;
                 } catch(PDOException $ex) {
                     echo "Erro: ".$ex->getMessage();

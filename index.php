@@ -35,7 +35,7 @@ $funcao = new Funcoes();
             <th>AÇÕES</th>
         </tr>
         <?php
-        $lista = $contato->listar();
+        $lista = $contato->getFoto();
         foreach($lista as $item):
         ?>
         <tbody>
@@ -48,7 +48,14 @@ $funcao = new Funcoes();
                 <td><?php echo $item['redeSocial']; ?></td>
                 <td><?php echo $item['profissao']; ?></td>
                 <td><?php echo $funcao->dataNasc($item['dataNasc'], 2); ?></td>
-                <td><?php echo $item['foto']; ?></td>
+                <td>
+                    <?php if(!empty($item['url'])): ?>
+                        <img src="image/contatos/<?php echo $item['url'];?>"
+                        height="50px" border="0">
+                    <?php else: ?>
+                        <img src="image/default.png" height="50px" border="0">
+                    <?php endif; ?>
+                </td>
                 <td><?php echo $item['ativo']; ?></td>
                 <td>
                     <?php if($usuarios->temPermissao("adicionar")): ?>
@@ -59,9 +66,9 @@ $funcao = new Funcoes();
                     <button><a href="gestaoUsuario.php">Usuário</a></button>
                     <?php endif; ?>
 
-                    <?php if($usuarios->temPermissao("editar")): ?>
+                    <?php //if($usuarios->temPermissao("editar")): ?>
                     <button><a href="editarContato.php?id=<?php echo $item['id'] ?>"> Editar</a></button>
-                    <?php endif; ?>
+                    <?php //endif; ?>
 
                     <?php if($usuarios->temPermissao("excluir")): ?>
                     <button><a href="excluirContato.php?id=<?php echo $item['id'] ?>" onclick="return confirm('Deseja realmente excluir esse contato?')">Excluir</a></button>
