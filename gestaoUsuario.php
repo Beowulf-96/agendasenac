@@ -1,4 +1,7 @@
-<?php include 'inc/header.php'; 
+<?php 
+session_start();
+
+include 'inc/header.php'; 
 include 'classes/usuario.php';
 include 'classes/funcoes.php';
 
@@ -8,8 +11,8 @@ $funcao = new Funcoes();
 
 if(!isset($_SESSION['super'])){
 header('Location: login.php');
-exit;
-} 
+    exit;
+}
 
 ?>
 

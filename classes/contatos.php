@@ -25,7 +25,7 @@ class Contato {
         $sql->bindParam(':email', $email, PDO::PARAM_STR);
         $sql->execute();
 
-        if($sql->rowCOunt() > 0) {
+        if($sql->rowCount() > 0) {
             $array = $sql->fetch(); //fetch retorna o email enccontrado
         }else{
             $array = array();
@@ -34,38 +34,131 @@ class Contato {
     }
 
     public function adicionar($email, $nome, $endereco, $telefone, $redeSocial, $profissao, $dataNasc, $foto, $ativo) {
-        $emailExistente = $this->existeEmail($email);
-        if(count($emailExistente) == 0) {
-            try{
-                $this->nome = $nome;
-                $this->endereco = $endereco;
-                $this->email = $email;
-                $this->telefone = $telefone;
-                $this->redeSocial = $redeSocial;
-                $this->profissao = $profissao;
-                $this->dataNasc = $dataNasc;
-                //$this->foto = $foto;
-                $this->ativo = $ativo;
-                $sql = $this->con->conectar()->prepare("INSERT INTO contatos (nome, endereco, email, telefone, redeSocial, profissao, dataNasc, foto, ativo) VALUES (:nome, :endereco, :email, :telefone, :redeSocial, :profissao, :dataNasc, :foto, :ativo)");
-                $sql->bindParam(":nome", $this->nome, PDO::PARAM_STR);
-                $sql->bindParam(":endereco", $this->endereco, PDO::PARAM_STR);
-                $sql->bindParam(":email", $this->email, PDO::PARAM_STR);
-                $sql->bindParam(":telefone", $this->telefone, PDO::PARAM_STR);
-                $sql->bindParam(":redeSocial", $this->redeSocial, PDO::PARAM_STR);
-                $sql->bindParam(":profissao", $this->profissao, PDO::PARAM_STR);
-                $sql->bindParam(":dataNasc", $this->dataNasc, PDO::PARAM_STR);
-                $sql->bindParam(":foto", $this->foto, PDO::PARAM_STR);
-                $sql->bindParam(":ativo", $this->ativo, PDO::PARAM_STR);
-                $sql->execute();
-
-
-            }catch(PDOException $ex) {
-                return 'ERRO: ' . $ex->getMessage();
+    echo "Método adicionar chamado<br>";
+    echo "Email: $email<br>";
+    
+    $emailExistente = $this->existeEmail($email);
+    echo "Email existente: ";
+    var_dump($emailExistente);
+    echo "<br>";
+    
+    if(count($emailExistente) == 0) {
+        try{
+            echo "Preparando para inserir...<br>";
+            
+            $this->nome = $nome;
+            $this->endereco = $endereco;
+            $this->email = $email;
+            $this->telefone = $telefone;
+            $this->redeSocial = $redeSocial;
+            $this->profissao = $profissao;
+            $this->dataNasc = $dataNasc;
+            $this->foto = ''; // Campo foto vazio na tabela contatos
+            $this->ativo = $ativo;
+            
+            // INSERT incluindo o campo foto
+            $sql = $this->con->conectar()->prepare("INSERT INTO contatos (nome, endereco, email, telefone, redeSocial, profissao, dataNasc, foto, ativo) VALUES (:nome, :endereco, :email, :telefone, :redeSocial, :profissao, :dataNasc, :foto, :ativo)");
+            $sql->bindParam(":nome", $this->nome, PDO::PARAM_STR);
+            $sql->bindParam(":endereco", $this->endereco, PDO::PARAM_STR);
+            $sql->bindParam(":email", $this->email, PDO::PARAM_STR);
+            $sql->bindParam(":telefone", $this->telefone, PDO::PARAM_STR);
+            $sql->bindParam(":redeSocial", $this->redeSocial, PDO::PARAM_STR);
+            $sql->bindParam(":profissao", $this->profissao, PDO::PARAM_STR);
+            $sql->bindParam(":dataNasc", $this->dataNasc, PDO::PARAM_STR);
+            $sql->bindParam(":foto", $this->foto, PDO::PARAM_STR);
+            $sql->bindParam(":ativo", $this->ativo, PDO::PARAM_STR);
+            
+            $executou = $sql->execute();
+            echo "Execute retornou: ";
+            var_dump($executou);
+            echo "<br>";
+            
+            if(!$executou) {
+                echo "Erro no SQL: ";
+                print_r($sql->errorInfo());
+                echo "<br>";
+                return FALSE;
             }
-        }else{
-            return FALSE;
+            
+            // Pegar o ID do contato recém-criado
+            $id = $this->con->conectar()->lastInsertId();
+            echo "ID inserido: $id<br>";
+            
+            // Inserir imagens se houver
+            if(isset($foto['tmp_name']) && count($foto['tmp_name']) > 0 && !empty($foto['tmp_name'][0])) {
+                echo "Processando fotos...<br>";
+                
+                // Verificar se o diretório existe
+                if(!is_dir('image/contatos/')) {
+                    mkdir('image/contatos/', 0777, true);
+                    echo "Diretório criado<br>";
+                }
+                
+                for ($q=0; $q<count($foto['tmp_name']); $q++) {
+                    if(!empty($foto['tmp_name'][$q])) {
+                        $tipo = $foto['type'][$q];
+                        echo "Processando foto $q - Tipo: $tipo<br>";
+                        
+                        if(in_array($tipo, array('image/jpeg', 'image/png', 'image/jpg'))){
+                            $tmpname = md5(time().rand(0, 9999)).'.jpg';
+                            
+                            if(move_uploaded_file($foto['tmp_name'][$q], 'image/contatos/'.$tmpname)) {
+                                echo "Arquivo movido com sucesso: $tmpname<br>";
+                                
+                                list($width_orig, $height_orig) = getimagesize('image/contatos/'.$tmpname);
+                                $ratio = $width_orig/$height_orig;
+                                $width = 500;
+                                $height = 500;
+                                
+                                if($width/$height > $ratio) {
+                                    $width = $height * $ratio;
+                                } else {
+                                    $height = $width/$ratio;
+                                }
+                                
+                                $img = imagecreatetruecolor($width, $height);
+                                
+                                if($tipo == 'image/jpeg' || $tipo == 'image/jpg') {
+                                    $origi = imagecreatefromjpeg('image/contatos/'. $tmpname);
+                                } elseif ($tipo == 'image/png') {
+                                    $origi = imagecreatefrompng('image/contatos/' .$tmpname);
+                                }
+                                
+                                imagecopyresampled($img, $origi, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+                                
+                                // Salvar imagem no servidor
+                                imagejpeg($img, 'image/contatos/'.$tmpname, 80);
+                                
+                                // Salvar a URL da foto no banco
+                                $sqlFoto = $this->con->conectar()->prepare("INSERT INTO foto_contato SET id_contato = :id_contato, url = :url");
+                                $sqlFoto->bindValue(":id_contato", $id);
+                                $sqlFoto->bindValue(":url", $tmpname);
+                                $sqlFoto->execute();
+                                
+                                echo "Foto salva no banco: $tmpname<br>";
+                            } else {
+                                echo "Erro ao mover arquivo<br>";
+                            }
+                        } else {
+                            echo "Tipo de arquivo não permitido: $tipo<br>";
+                        }
+                    }
+                }
+            } else {
+                echo "Nenhuma foto para processar<br>";
+            }
+            
+            return TRUE;
+
+        }catch(PDOException $ex) {
+            echo 'ERRO PDO: ' . $ex->getMessage() . "<br>";
+            return 'ERRO: ' . $ex->getMessage();
         }
+    }else{
+        echo "Email já existe no banco<br>";
+        return FALSE;
     }
+}
 
     public function listar() {
         try {
@@ -114,7 +207,7 @@ class Contato {
                 return FALSE;
             } else {
                 try{
-                    $sql = $this->con->conectar()->prepare("UPDATE contatos SET nome = :nome, endereco = :endereco, email = :email, telefone = :telefone, redeSocial = :redeSocial, profissao = :profissao, dataNasc = :dataNasc, foto = :foto, ativo = :ativo WHERE id = :id");
+                    $sql = $this->con->conectar()->prepare("UPDATE contatos SET nome = :nome, endereco = :endereco, email = :email, telefone = :telefone, redeSocial = :redeSocial, profissao = :profissao, dataNasc = :dataNasc, ativo = :ativo WHERE id = :id");
                     $sql->bindValue(":nome", $nome);
                     $sql->bindValue(":endereco", $endereco);
                     $sql->bindValue(":email", $email);
@@ -133,8 +226,8 @@ class Contato {
                         $tipo = $foto['type'][$q];
                         if(in_array($tipo, array('image/jpeg', 'image/png'))){
                             $tmpname = md5(time().rand(0, 9999)).'.jpg';
-                            move_uploaded_file($foto['tmp_name'][$q], 'img/contatos/'.$tmpname);
-                            list($width_orig, $height_orig) = getimagesize('img/contatos/'.$tmpname);
+                            move_uploaded_file($foto['tmp_name'][$q], 'image/contatos/'.$tmpname);
+                            list($width_orig, $height_orig) = getimagesize('image/contatos/'.$tmpname);
                             $ratio = $width_orig/$height_orig;
                             $width = 500;
                             $height = 500;
@@ -144,12 +237,12 @@ class Contato {
                                 $height = $width/$ratio;
                             }
                             $img = imagecreatetruecolor($width, $height);
-                            if($tipo === 'image/jpeg') {
+                            if($tipo == 'image/jpeg') {
                                 $origi = imagecreatefromjpeg('image/contatos/'. $tmpname);
                             } elseif ($tipo == 'image/png') {
                                 $origi = imagecreatefrompng('image/contatos/' .$tmpname);
                             }
-                            imagecopyesampled($img, $origi, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+                            imagecopyresampled($img, $origi, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
 
                             //salvar imagens servidor
 
@@ -164,8 +257,7 @@ class Contato {
                 }
             }
                 return TRUE;
-
-                    return TRUE;
+                
                 } catch(PDOException $ex) {
                     echo "Erro: ".$ex->getMessage();
                 }
@@ -173,6 +265,12 @@ class Contato {
         }
         public function deletar($id) {
         $sql =$this->con->conectar()->prepare("DELETE FROM contatos WHERE id = :id");
+        $sql->bindValue(":id", $id);
+        $sql->execute();
+        }
+
+        public function deletarFoto($id) {
+        $sql =$this->con->conectar()->prepare("DELETE FROM foto_contato WHERE id = :id");
         $sql->bindValue(":id", $id);
         $sql->execute();
         }

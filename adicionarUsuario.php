@@ -1,4 +1,7 @@
-<?php require 'inc/header.php'; ?>
+<?php 
+session_start();
+require 'inc/header.php';
+?>
 
 <h1>Adicionar Usuário</h1>
 <form method="POST" action="adicionarUsuarioSubmit.php">

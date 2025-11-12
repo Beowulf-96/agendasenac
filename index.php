@@ -6,7 +6,7 @@ include 'classes/funcoes.php';
 include 'classes/usuario.php';
 
 if(!isset($_SESSION['logado'])){
-    header('Location: login.php');
+header('Location: login.php');
     exit;
 }
 
@@ -66,15 +66,15 @@ $funcao = new Funcoes();
                     <button><a href="gestaoUsuario.php">Usuário</a></button>
                     <?php endif; ?>
 
-                    <?php //if($usuarios->temPermissao("editar")): ?>
+                    <?php if($usuarios->temPermissao("editar")): ?>
                     <button><a href="editarContato.php?id=<?php echo $item['id'] ?>"> Editar</a></button>
-                    <?php //endif; ?>
+                    <?php endif; ?>
 
                     <?php if($usuarios->temPermissao("excluir")): ?>
                     <button><a href="excluirContato.php?id=<?php echo $item['id'] ?>" onclick="return confirm('Deseja realmente excluir esse contato?')">Excluir</a></button>
                     <?php endif; ?>
 
-                    <button><a href="sair.php">Sair</a></button>
+                    
                 </td>
             </tr>
         </tbody>

@@ -9,4 +9,6 @@
 <body>
     <header>
         <h1>Agenda Senac 2025</h1>
+        <button><a href="gestaoUsuario.php">Usuários</a></button>
+        <button><a href="sair.php">Sair</a></button>
     </header>

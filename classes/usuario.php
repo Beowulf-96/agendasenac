@@ -132,6 +132,11 @@ class Usuario {
             if($sql->rowCount() > 0) {
                 $sql = $sql->fetch();
                 $this->permissoes = explode(',', $sql ['permissoes']);
+                if(in_array('super', $this->permissoes)) {
+                    $_SESSION['super'] = 1;
+                } else {
+                    unset($_SESSION['super']);
+                }
             }
         }
 
